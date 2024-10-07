@@ -1,7 +1,7 @@
 name: formality
-description: "A new Flutter package project."
+description: A simple Flutter form validation library.
 version: 0.0.1
-homepage:
+homepage: https://github.com/danReynolds/formality
 
 environment:
   sdk: '>=3.4.3 <4.0.0'
