@@ -19,10 +19,7 @@ class MyPage extends StatelessWidget {
   @override
   build(context) {
     return FormBuilder(
-      initialFormData: UserFormModel(
-        firstName: 'John',
-        lastName: 'Smith',
-      ),
+      initialFormData: UserFormModel(firstName: 'John', lastName: ''),
       builder: (context, formData, controller) {
         final UserFormModel(:firstName, :lastName) = formData;
 
