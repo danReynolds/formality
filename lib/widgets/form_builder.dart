@@ -1,0 +1,74 @@
+part of '../formality.dart';
+
+class FormController<T> {
+  late bool Function() validate;
+  late void Function(T updatedData) setForm;
+  late void Function([T? formData]) submit;
+}
+
+// A controlled [FormProvider] requires consumers to wire up an onChange handler
+// and pass down the data to rebuild with. An [UncntrolledFormProvider], by contrast,
+// manages its own data.
+class FormBuilder<T> extends StatefulWidget {
+  final GlobalKey<FormState>? formKey;
+  final Widget Function(
+    BuildContext context,
+    T formData,
+    FormController<T> controller,
+  ) builder;
+  final T initialFormData;
+  final void Function(T formData)? onSubmit;
+
+  const FormBuilder({
+    super.key,
+    required this.builder,
+    required this.initialFormData,
+    this.onSubmit,
+    this.formKey,
+  });
+
+  @override
+  FormBuilderState createState() => FormBuilderState<T>();
+}
+
+class FormBuilderState<T> extends State<FormBuilder<T>> {
+  final _formController = FormController<T>();
+  final _validationBuilderController = ValidationBuilderController();
+  late T _formData;
+
+  @override
+  initState() {
+    super.initState();
+
+    _formData = widget.initialFormData;
+    _formController.setForm = (data) {
+      setState(() {
+        _formData = data;
+      });
+    };
+    _formController.validate = () {
+      return _validationBuilderController.validate();
+    };
+    _formController.submit = ([T? formData]) {
+      if (formData != null) {
+        _formController.setForm(formData);
+      }
+
+      if (_formController.validate()) {
+        widget.onSubmit?.call(_formData);
+      } else {
+        HapticFeedback.lightImpact();
+      }
+    };
+  }
+
+  @override
+  build(context) {
+    return ValidationBuilder(
+      controller: _validationBuilderController,
+      builder: (context, _) {
+        return widget.builder(context, _formData, _formController);
+      },
+    );
+  }
+}
