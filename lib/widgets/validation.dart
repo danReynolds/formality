@@ -26,13 +26,15 @@ class ValidationController {
     }
   }
 
+  /// Validates just the field associated with this controller. Returns whether the field is valid. If
+  /// the field is not valid, its validation error is shown.
   late bool Function() validate;
 
   /// Whether the validation is required and should fail the passing of the overall validation result.
-  final bool isRequired;
+  final bool required;
 
   ValidationController({
-    this.isRequired = true,
+    this.required = true,
   });
 }
 
@@ -41,7 +43,7 @@ class Validation extends StatefulWidget {
   final bool valid;
 
   /// Whether the validation is required and should fail the the overall validation result.
-  final bool isRequired;
+  final bool required;
 
   final Widget child;
 
@@ -60,42 +62,27 @@ class Validation extends StatefulWidget {
     this.controller,
     this.childAnimationBuilder,
     this.errorAnimationBuilder,
-    this.isRequired = true,
+    this.required = true,
   });
 
   @override
   ValidationState createState() => ValidationState();
-
-  static Widget result(
-    ValidationResult? result, {
-    required Widget child,
-    ValidationController? controller,
-    Widget? error,
-  }) {
-    return Validation(
-      valid: result?.valid ?? true,
-      controller: controller,
-      error: error,
-      child: child,
-    );
-  }
 }
 
 class ValidationState extends State<Validation> {
-  late final ValidationProvider _validationProvider;
+  late final _ValidationProvider _validationProvider;
 
   bool _isRegistered = false;
   bool _showValidationError = false;
 
   late final ValidationController _validationController;
-  late ValidationControllerListener _listener;
 
   @override
   void initState() {
     super.initState();
 
-    _validationController = widget.controller ??
-        ValidationController(isRequired: widget.isRequired);
+    _validationController =
+        widget.controller ?? ValidationController(required: widget.required);
 
     _validationController.validate = () {
       final isValid = widget.valid;
@@ -115,7 +102,6 @@ class ValidationState extends State<Validation> {
   @override
   dispose() {
     _validationProvider.unregister(_validationController);
-    _validationController.removeListener(_listener);
     super.dispose();
   }
 
@@ -125,7 +111,7 @@ class ValidationState extends State<Validation> {
 
     if (!_isRegistered) {
       _isRegistered = true;
-      _validationProvider = ValidationProvider.of(context);
+      _validationProvider = _ValidationProvider.of(context);
       _validationProvider.register(_validationController);
     }
   }

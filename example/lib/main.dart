@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:formality/formality.dart';
 
 void main() {
@@ -58,7 +57,7 @@ class ExampleFormPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Formality')),
-      body: FormBuilder<ExampleFormModel>(
+      body: FormBuilder(
         initialFormData: ExampleFormModel(firstName: 'John'),
         builder: (context, formData, controller) {
           final ExampleFormModel(:firstName, :lastName, :email) = formData;

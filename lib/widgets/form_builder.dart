@@ -1,5 +1,6 @@
 part of '../formality.dart';
 
+/// The controller for the form used to validate, update and submit its data.
 class FormController<T> {
   late bool Function() validate;
   late void Function(T updatedData) setForm;
@@ -33,7 +34,7 @@ class FormBuilder<T> extends StatefulWidget {
 
 class FormBuilderState<T> extends State<FormBuilder<T>> {
   final _formController = FormController<T>();
-  final _validationBuilderController = ValidationBuilderController();
+  final _validationGroupController = ValidationGroupController();
   late T _formData;
 
   @override
@@ -47,7 +48,7 @@ class FormBuilderState<T> extends State<FormBuilder<T>> {
       });
     };
     _formController.validate = () {
-      return _validationBuilderController.validate();
+      return _validationGroupController.validate();
     };
     _formController.submit = ([T? formData]) {
       if (formData != null) {
@@ -56,16 +57,14 @@ class FormBuilderState<T> extends State<FormBuilder<T>> {
 
       if (_formController.validate()) {
         widget.onSubmit?.call(_formData);
-      } else {
-        HapticFeedback.lightImpact();
       }
     };
   }
 
   @override
   build(context) {
-    return ValidationBuilder(
-      controller: _validationBuilderController,
+    return ValidationGroupBuilder(
+      controller: _validationGroupController,
       builder: (context, _) {
         return widget.builder(context, _formData, _formController);
       },
