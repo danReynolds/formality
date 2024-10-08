@@ -56,9 +56,9 @@ class MyPage extends StatelessWidget {
           ],
         );
       }
-    );
+    
   }
-}
+
 ```
 
 All validation widgets animate errors as shown below:
@@ -72,6 +72,29 @@ Field animations can be customized using the `Validation.childAnimationBuilder` 
 Fields can be labeled as optional using the `Validation.required` field.
 
 ```dart
+import 'package:flutter/material.dart';
+import 'package:formality/formality.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Formality Example'),
+        ),
+        body: MyPage(),
+      ),
+    );
+  }
+}
+
 class UserFormModel {
   final String name;
   final String description;
@@ -80,55 +103,89 @@ class UserFormModel {
     required this.name,
     required this.description,
   });
+
+  UserFormModel copyWith({String? name, String? description}) {
+    return UserFormModel(
+      name: name ?? this.name,
+      description: description ?? this.description,
+    );
+  }
 }
 
 class MyPage extends StatelessWidget {
   @override
-  build(context) {
-    return FormBuilder(
-      initialFormData: UserFormModel(
-        name: 'John Smith',
-        description: '',
-      ),
-      builder: (context, formData, controller) {
-        final UserFormModel(:name, :description) = formData;
-
-        return Column(
+  Widget build(BuildContext context) {
+    return Center(
+      child: FractionallySizedBox(
+        widthFactor: 0.7,  // Limits the form width to 70% of the screen width
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Validation(
-              valid: name.isNotEmpty,
-              required: false,
-              child: TextFormField(
-                initialValue: name,
-                decoration: const InputDecoration(labelText: 'Name'),
-                onChanged: (value) => controller.setForm(
-                  formData.copyWith(name: value),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: FormBuilder(
+                initialFormData: UserFormModel(
+                  name: 'John Smith',
+                  description: '',
                 ),
-              ),
-            ),
-            Validation(
-              valid: lastName.isNotEmpty,
-              // Mark a field as optional to allow submission with failing validation.
-              required: false,
-              child: TextFormField(
-                initialValue: lastName,
-                decoration: const InputDecoration(labelText: 'Optional description'),
-                onChanged: (value) => controller.setForm(
-                  formData.copyWith(description: value),
+                builder: (context, formData, controller) {
+                  final UserFormModel(:name, :description) = formData;
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Validation(
+                        valid: name.isNotEmpty,
+                        error: const Text("Name",
+                          style: TextStyle(color: Colors.red),),
+                        required: false,
+                        child: TextFormField(
+                          initialValue: name,
+                          decoration: const InputDecoration(labelText: 'Name'),
+                          onChanged: (value) => controller.setForm(
+                            formData.copyWith(name: value),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16.0),
+                      Validation(
+                        valid: description.isNotEmpty,
+                        error: const Text(
+                          'Description cannot be empty',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                        child: TextFormField(
+                          initialValue: description,
+                          decoration: const InputDecoration(
+                            labelText: 'Description',
+                          ),
+                          onChanged: (value) {
+                            controller.setForm(
+                              formData.copyWith(description: value),
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 24.0),
+                      ElevatedButton(
+                        child: const Text('Submit'),
+                        onPressed: () {
+                          if (controller.validate()) {
+                            // Add your form submission logic here
+                            print('Form is valid and submitted');
+                          }
+                        },
+                      ),
+                    ],
+                  );
                 },
               ),
             ),
-            ElevatedButton(
-              child: Text('Submit'),
-              onPress: () {
-                if (controller.validate()) {
-                }
-              }
-            )
           ],
-        );
-      }
+        ),
+      ),
     );
   }
 }
+
 ```
