@@ -127,7 +127,7 @@ class ValidationState extends State<Validation> {
     }
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         childAnimationBuilder?.call(widget.child, _validationController) ??
             FormalityChildAnimation(
