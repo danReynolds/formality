@@ -18,12 +18,14 @@ class FormBuilder<T> extends StatefulWidget {
     FormController<T> controller,
   ) builder;
   final T initialFormData;
+  final void Function(T formData)? onChange;
   final void Function(T formData)? onSubmit;
 
   const FormBuilder({
     super.key,
     required this.builder,
     required this.initialFormData,
+    this.onChange,
     this.onSubmit,
     this.formKey,
   });
@@ -46,6 +48,7 @@ class FormBuilderState<T> extends State<FormBuilder<T>> {
       setState(() {
         _formData = data;
       });
+      widget.onChange?.call(data);
     };
     _formController.validate = () {
       return _validationGroupController.validate();
