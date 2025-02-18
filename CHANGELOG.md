@@ -1,3 +1,7 @@
+## 0.0.3
+
+* Style tweak
+
 ## 0.0.2
 
 * Add onChange handler
