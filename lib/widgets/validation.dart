@@ -1,22 +1,22 @@
 part of '../formality.dart';
 
-typedef ValidationControllerListener = void Function(bool isValid);
+typedef ValidationListener = void Function(bool isValid);
 typedef ValidationAnimationBuilder = Widget Function(
   Widget child,
   ValidationController controller,
 );
 
 class ValidationController {
-  final Set<ValidationControllerListener> _listeners = {};
+  final Set<ValidationListener> _listeners = {};
 
-  ValidationControllerListener addListener(
-    ValidationControllerListener listener,
+  ValidationListener addListener(
+    ValidationListener listener,
   ) {
     _listeners.add(listener);
     return listener;
   }
 
-  void removeListener(ValidationControllerListener listener) {
+  void removeListener(ValidationListener listener) {
     _listeners.remove(listener);
   }
 
@@ -89,7 +89,7 @@ class ValidationState extends State<Validation> {
 
       if (!isValid && !_showValidationError) {
         setState(() {
-          _showValidationError = !isValid;
+          _showValidationError = true;
         });
       }
 

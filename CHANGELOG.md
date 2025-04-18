@@ -1,3 +1,7 @@
+## 0.0.4
+
+* Small fixes
+
 ## 0.0.3
 
 * Style tweak

@@ -18,7 +18,7 @@ class DefaultShakeAnimationState extends State<FormalityChildAnimation>
     with TickerProviderStateMixin {
   late final _tintAnimationController = AnimationController(vsync: this);
   late final _shakeAnimationController = AnimationController(vsync: this);
-  late final ValidationControllerListener _listener;
+  late final ValidationListener _listener;
 
   @override
   void initState() {

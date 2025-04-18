@@ -36,7 +36,7 @@ class FormBuilder<T> extends StatefulWidget {
 
 class FormBuilderState<T> extends State<FormBuilder<T>> {
   final _formController = FormController<T>();
-  final _validationGroupController = ValidationGroupController();
+  final _validationController = ValidationBuilderController();
   late T _formData;
 
   @override
@@ -51,7 +51,7 @@ class FormBuilderState<T> extends State<FormBuilder<T>> {
       widget.onChange?.call(data);
     };
     _formController.validate = () {
-      return _validationGroupController.validate();
+      return _validationController.validate();
     };
     _formController.submit = ([T? formData]) {
       if (formData != null) {
@@ -66,8 +66,8 @@ class FormBuilderState<T> extends State<FormBuilder<T>> {
 
   @override
   build(context) {
-    return ValidationGroupBuilder(
-      controller: _validationGroupController,
+    return ValidationBuilder(
+      controller: _validationController,
       builder: (context, _) {
         return widget.builder(context, _formData, _formController);
       },
